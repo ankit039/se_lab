@@ -24,7 +24,7 @@ function MainComponent() {
     <>
       <Router>
         <Switch>
-          <Route path="/login" exact={true} component={LoginComponent} />
+          <Route path="/" exact={true} component={LoginComponent} exact />
           <Route path="/news" exact={true} component={NewscardComponent} />
         </Switch>
       </Router>
