@@ -14,7 +14,7 @@ function PlatformselectComponent() {
 
       var i;
       var temparr = [];
-      for (i = 0; i < 4; i++) {
+      for (i = 0; i < tickarr.length; i++) {
         i == id - 1 ? (temparr[i] = true) : (temparr[i] = tickarr[i]);
       }
 
@@ -27,7 +27,7 @@ function PlatformselectComponent() {
 
         var i;
         var temparr = [];
-        for (i = 0; i < 4; i++) {
+        for (i = 0; i < tickarr.length; i++) {
           i == id - 1 ? (temparr[i] = false) : (temparr[i] = tickarr[i]);
         }
 
@@ -40,6 +40,7 @@ function PlatformselectComponent() {
   return (
     <>
       <div className="parent-platformselect">
+        <h3 style={{position: "absolute", right:0, top:0, padding: "20px"}}>Hi, {localStorage.getItem('email')}</h3>
         <div id="app">
           <div id="app-content">
             <h3 style={{ paddingLeft: "20px" }}>Select News Platform</h3>

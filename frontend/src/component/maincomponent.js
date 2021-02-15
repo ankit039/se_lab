@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext"
 
 import {LoginComponent} from "./login/login"
 import {NewscardComponent} from "./newscard/newscard"
@@ -24,11 +25,13 @@ function MainComponent() {
   return (
     <>
       <Router>
+      <AuthProvider>
         <Switch>
           <Route path="/" exact={true} component={LoginComponent} exact />
           <Route path="/platform_select" exact={true} component={PlatformselectComponent} />
           <Route path="/news" exact={true} component={NewscardComponent} />
         </Switch>
+        </AuthProvider>
       </Router>
       {/* 
       * end of routing

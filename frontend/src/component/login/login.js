@@ -1,91 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
-import {fire} from "./fire";
 import "./login.css";
+import { useAuth } from "../contexts/AuthContext";
+import { Link, useHistory } from "react-router-dom";
 
 function LoginComponent() {
-  const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [cpassword, setCPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signup } = useAuth();
+  const history = useHistory();
 
-  const clearInputs = () => {
-    setEmail("");
-    setPassword("");
-  };
-  
-  const clearErrors = () => {
-    setEmailError("");
-    setPasswordError("");
-  };
+  const handleLogin = () => {};
 
-  const handleLogin = () => {
-    clearErrors();
-    fire
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .catch(err => {
-        switch(err.code){
-          case "auth/invalid-email":
-          case "auth/user-disabled":
-          case "auth/user-not-found":
-            setEmailError(err.message);
-            break;
+  async function handleSignUp(e) {
+    e.preventDefault();
+    if (cpassword !== password) {
+      return setError("Passwords do not match");
+    }
 
-          case "auth/wrong-password":
-            setPasswordError(err.message);
-            break;
-        }
+    try {
+      setError("");
+      setLoading(true);
+      await signup(email, password).then((data) => {
+        localStorage.setItem("email", data.user.email);
       });
-  };
-
-  const handleSignUp = () => {
-    clearErrors();
-    fire
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        alert("Worked  " + userCredential);
-      })
-      .catch(err => {
-        switch(err.code){
-          case "auth/email-already-in-use":
-          case "auth/invalid-email":
-            alert(err.message);
-            break;
-
-          case "auth/weak-password":
-            alert(err.message);
-            break;
-
-          default :
-            alert("Atharva20");
-        }
-      });
-      fire.currentUser.sendEmailVerification();
-  };
-
-  const logOut = () => {
-    fire.auth().signOut();
-  };
-
-  const authListener = () => {
-    fire.auth().onAuthStateChanged(user => {
-      if(user){
-        clearInputs();
-        setUser(user);
-      }
-      else{
-        setUser("");
-      }
-    });
-  };
-
-  useEffect(() => {
-    authListener();
-  }, [])
+      history.push("/platform_select");
+    } catch {
+      setError("Failed to create an account");
+    }
+    setLoading(false);
+  }
 
   const forgotbutton = () => {
     var element = document.getElementById("forgot");
@@ -157,7 +104,9 @@ function LoginComponent() {
                   />
                   <div className="border" />
                 </label>
-                <button type="submit">Login</button>
+                <button type="submit" onClick={() => handleLogin()}>
+                  Login
+                </button>
               </section>
               <footer>
                 <button
@@ -181,38 +130,43 @@ function LoginComponent() {
               </footer>
             </form>
             {/* Register form */}
-            <form id="register" className="otherForm">
+            <form id="register" className="otherForm" onSubmit={handleSignUp}>
               <header>
                 <h1>Become a Bro</h1>
                 <p>Register to gain full access</p>
               </header>
               <section>
                 <label>
-                  <p>Username</p>
-                  <input type="text" placeholder=" " />
-                  <div className="border" />
-                </label>
-                <label>
                   <p>Email</p>
-                  <input type="email" placeholder=" " onChange={(e) => setEmail(e.target.value)}
-                    value={email}/>
+                  <input
+                    type="email"
+                    placeholder=" "
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                  />
                   <div className="border" />
                 </label>
                 <label>
                   <p>Password</p>
-                  <input type="password" placeholder=" " onChange={(e) => setPassword(e.target.value)}
-                    value={password}/>
+                  <input
+                    type="password"
+                    placeholder=" "
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                  />
                   <div className="border" />
                 </label>
                 <label>
                   <p>Repeat Password</p>
-                  <input type="password" placeholder=" " />
+                  <input
+                    type="password"
+                    placeholder=" "
+                    onChange={(e) => setCPassword(e.target.value)}
+                    value={cpassword}
+                  />
                   <div className="border" />
                 </label>
-                <button type="submit" onClick={() => {
-                    handleSignUp();
-                  }}>
-                    Register</button>
+                <button type="submit">Register</button>
               </section>
               <footer>
                 <button
