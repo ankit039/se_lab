@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import {LoginComponent} from "./login/login"
 import {NewscardComponent} from "./newscard/newscard"
+import {PlatformselectComponent} from "./platformselect/platformselect"
 
 function MainComponent() {
   const [isLogin, setisLogin] = useState(0);
@@ -25,6 +26,7 @@ function MainComponent() {
       <Router>
         <Switch>
           <Route path="/" exact={true} component={LoginComponent} exact />
+          <Route path="/platform_select" exact={true} component={PlatformselectComponent} />
           <Route path="/news" exact={true} component={NewscardComponent} />
         </Switch>
       </Router>
