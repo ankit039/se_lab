@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./login.css";
+import { LoaderComponent } from "../loader/loader";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 
@@ -74,7 +75,6 @@ function LoginComponent() {
     e.preventDefault();
     try {
       setError("");
-      setLoading(true);
       await resetPassword(email)
         .then((data) => {
           setMessage("Check your inbox for further instructions");
@@ -88,7 +88,6 @@ function LoginComponent() {
     } catch {
       setError("Failed to reset password");
     }
-    setLoading(false);
   }
 
   const forgotbutton = () => {
@@ -105,7 +104,11 @@ function LoginComponent() {
     element2.classList.toggle("toggle");
   };
 
-  return (
+  return loading == true ? (
+    <>
+      <LoaderComponent></LoaderComponent>
+    </>
+  ) : (
     <>
       <div className="parent-login">
         <div id="formContainer">

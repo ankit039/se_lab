@@ -4,21 +4,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./newscard.css";
 
 function NewscardComponent() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const forgotbutton = () => {
-    var element = document.getElementById("forgot");
-    element.classList.toggle("toggle");
-  };
-
-  const registerbutton = () => {
-    var element1 = document.getElementById("register");
-    var element2 = document.getElementById("formContainer");
-    element1.classList.toggle("toggle");
-    element2.classList.toggle("toggle");
-  };
-
   return (
     <>
       <div className="parent-newscard">
