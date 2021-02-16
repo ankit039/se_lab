@@ -9,37 +9,96 @@ function LoginComponent() {
   const [password, setPassword] = useState("");
   const [cpassword, setCPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signup } = useAuth();
+  const { login, signup, resetPassword } = useAuth();
   const history = useHistory();
 
-  const handleLogin = () => {};
+  const handlePasswordmatch = (p, cp) => {
+    if (p != cp) {
+      setError("Password don't matched");
+      setCPassword(cp);
+    } else {
+      setError("");
+      setCPassword(cp);
+    }
+  };
+
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    try {
+      setError("");
+      setLoading(true);
+      await login(email, password)
+        .then((data) => {
+          localStorage.setItem("email", data.user.email);
+          history.push("/news");
+        })
+        .catch((e) => {
+          alert(e.message.toString());
+          history.push("/");
+        });
+    } catch {
+      setError("Failed to log in");
+    }
+
+    setLoading(false);
+  }
 
   async function handleSignUp(e) {
     e.preventDefault();
     if (cpassword !== password) {
-      return setError("Passwords do not match");
+      return setError("Password don't matched");
     }
 
     try {
       setError("");
       setLoading(true);
-      await signup(email, password).then((data) => {
-        localStorage.setItem("email", data.user.email);
-      });
-      history.push("/platform_select");
+      await signup(email, password)
+        .then((data) => {
+          localStorage.setItem("email", data.user.email);
+          history.push("/platform_select");
+        })
+        .catch((e) => {
+          history.push("/");
+          alert(e);
+        });
     } catch {
       setError("Failed to create an account");
     }
     setLoading(false);
   }
 
+  async function handleForgotpass(e) {
+    e.preventDefault();
+    try {
+      setError("");
+      setLoading(true);
+      await resetPassword(email)
+        .then((data) => {
+          setMessage("Check your inbox for further instructions");
+          console.log(data);
+          history.push("/");
+        })
+        .catch((e) => {
+          history.push("/");
+          alert(e);
+        });
+    } catch {
+      setError("Failed to reset password");
+    }
+    setLoading(false);
+  }
+
   const forgotbutton = () => {
+    setMessage("");
     var element = document.getElementById("forgot");
     element.classList.toggle("toggle");
   };
 
   const registerbutton = () => {
+    setMessage("");
     var element1 = document.getElementById("register");
     var element2 = document.getElementById("formContainer");
     element1.classList.toggle("toggle");
@@ -52,7 +111,7 @@ function LoginComponent() {
         <div id="formContainer">
           <div className="formRight">
             {/* Forgot password form */}
-            <form id="forgot" className="otherForm">
+            <form id="forgot" className="otherForm" onSubmit={handleForgotpass}>
               <header>
                 <h1>Forgot Password</h1>
                 <p>Seems like your password is missing</p>
@@ -60,7 +119,13 @@ function LoginComponent() {
               <section>
                 <label>
                   <p>Email</p>
-                  <input type="email" placeholder=" " />
+                  <input
+                    type="email"
+                    placeholder=" "
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                  />
+                  <span style={{ color: "#6de151" }}>{message}</span>
                   <div className="border" />
                 </label>
                 <button type="submit">Send email</button>
@@ -78,7 +143,7 @@ function LoginComponent() {
               </footer>
             </form>
             {/* Login form */}
-            <form id="login">
+            <form id="login" onSubmit={handleLogin}>
               <header>
                 <h1>Welcome back</h1>
                 <p>Login to continue</p>
@@ -104,9 +169,7 @@ function LoginComponent() {
                   />
                   <div className="border" />
                 </label>
-                <button type="submit" onClick={() => handleLogin()}>
-                  Login
-                </button>
+                <button type="submit">Login</button>
               </section>
               <footer>
                 <button
@@ -161,9 +224,12 @@ function LoginComponent() {
                   <input
                     type="password"
                     placeholder=" "
-                    onChange={(e) => setCPassword(e.target.value)}
+                    onChange={(e) => {
+                      handlePasswordmatch(password, e.target.value);
+                    }}
                     value={cpassword}
                   />
+                  <span style={{ color: "red" }}>{error}</span>
                   <div className="border" />
                 </label>
                 <button type="submit">Register</button>
