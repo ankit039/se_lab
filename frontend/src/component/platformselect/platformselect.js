@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 import "./platformselect.css";
 
 function PlatformselectComponent() {
-  const [select, setselected] = useState([]);
+  const [select, setselected] = useState(
+    JSON.parse("[" + localStorage.getItem("se-platform_selected") + "]")
+  );
   const [tickarr, setTickarr] = useState([false, false, false, false]);
+  const { changePlatform } = useAuth();
+  const history = useHistory();
+
+  if (select[0] == 0) {
+    setTickarr([false, false, false, false]);
+  } else {
+    var i;
+    for (i = 0; i < select.length; i++) {
+      tickarr[select[i] - 1] = true;
+    }
+  }
 
   const add_selected = (id) => {
     let selected = select;
@@ -37,10 +52,27 @@ function PlatformselectComponent() {
     }
   };
 
+  async function handleSubmit() {
+    if (select.length == 0) {
+      alert("Select atleast one news platform.");
+    } else {
+      await changePlatform(localStorage.getItem("se-uid"), select);
+    }
+  }
+
+  if (
+    localStorage.getItem("se-name") == undefined ||
+    localStorage.getItem("se-uid") == undefined ||
+    localStorage.getItem("se-email") == undefined
+  ) {
+    history.push("/");
+  }
   return (
     <>
       <div className="parent-platformselect">
-        <h3 style={{position: "absolute", right:0, top:0, padding: "20px"}}>Hi, {localStorage.getItem('email')}</h3>
+        <h3 style={{ position: "absolute", right: 0, top: 0, padding: "20px" }}>
+          Hi, {localStorage.getItem("se-name")}
+        </h3>
         <div id="app">
           <div id="app-content">
             <h3 style={{ paddingLeft: "20px" }}>Select News Platform</h3>
@@ -73,9 +105,17 @@ function PlatformselectComponent() {
               ))}
             </ul>
           </div>
-          <a href="javascript:;" className="btn">
+          {/* <a href="javascript:;" className="btn">
             Done
-          </a>
+          </a> */}
+          <button
+            className="btn"
+            onClick={() => {
+              handleSubmit();
+            }}
+          >
+            Done
+          </button>
         </div>
       </div>
     </>
@@ -95,7 +135,7 @@ const platform = [
     name: "Inshorts",
     link: "https://inshorts.com/",
     image:
-      "https://pbs.twimg.com/profile_images/627085479268126720/k4Wwj-lS.png",
+      "https://mir-s3-cdn-cf.behance.net/projects/404/4509cb100062303.Y3JvcCw4ODksNjk1LDUyLDE0Nw.png",
   },
   {
     id: 3,

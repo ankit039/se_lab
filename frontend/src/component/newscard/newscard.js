@@ -1,12 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import "./newscard.css";
 
 function NewscardComponent() {
+  const history = useHistory();
+
+  const logoutButoon = () => {
+    localStorage.removeItem("se-name");
+    localStorage.removeItem("se-email");
+    localStorage.removeItem("se-platform_selected");
+    localStorage.removeItem("se-uid");
+    window.location.reload()
+  };
+
+  if (
+    localStorage.getItem("se-name") == undefined ||
+    localStorage.getItem("se-uid") == undefined ||
+    localStorage.getItem("se-email") == undefined
+  ) {
+    history.push("/");
+  }
   return (
     <>
       <div className="parent-newscard">
+        <button
+          style={{
+            position: "absolute",
+            right: 0,
+            top: 0,
+            padding: "10px 24px",
+            backgroundColor: "grey",
+            color: "white",
+          }}
+          onClick={() => {
+            logoutButoon();
+          }}
+        >
+          Logout
+        </button>
         <figure className="snip1216">
           <div className="image">
             <img
@@ -111,8 +144,6 @@ function NewscardComponent() {
           </footer>
           <a href="#" />
         </figure>
-
-
       </div>
     </>
   );

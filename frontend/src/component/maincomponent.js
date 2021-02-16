@@ -1,41 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext"
+import { AuthProvider } from "./contexts/AuthContext";
+import LoginContext from "./contexts/islogin";
 
-import {LoginComponent} from "./login/login"
-import {NewscardComponent} from "./newscard/newscard"
-import {PlatformselectComponent} from "./platformselect/platformselect"
+import { LoginComponent } from "./login/login";
+import { NewscardComponent } from "./newscard/newscard";
+import { PlatformselectComponent } from "./platformselect/platformselect";
 
 function MainComponent() {
-  const [isLogin, setisLogin] = useState(0);
-
-  const [userdetail, setuserdetail] = useState({
-    googleId: "null",
-    imageUrl: "null",
-    email: "null",
-    name: "null",
-    logintype: "null",
+  const [isLogin, setisLogin] = useState({
+    login: false,
+    uid: "",
+    name: "",
+    email: "",
+    platform_selected: [],
   });
-
   const isLoginvalue = { isLogin, setisLogin };
-  const userdetailvalue = { userdetail, setuserdetail };
 
   useEffect(() => {}, []);
 
   return (
     <>
       <Router>
-      <AuthProvider>
-        <Switch>
-          <Route path="/" exact={true} component={LoginComponent} exact />
-          <Route path="/platform_select" exact={true} component={PlatformselectComponent} />
-          <Route path="/news" exact={true} component={NewscardComponent} />
-        </Switch>
-        </AuthProvider>
+        <LoginContext.Provider value={isLoginvalue}>
+          <AuthProvider>
+            <Switch>
+              <Route path="/" exact={true} component={LoginComponent} exact />
+              <Route
+                path="/platform_select"
+                exact={true}
+                component={PlatformselectComponent}
+              />
+              <Route path="/news" exact={true} component={NewscardComponent} />
+            </Switch>
+          </AuthProvider>
+        </LoginContext.Provider>
       </Router>
-      {/* 
-      * end of routing
-      */}
+      {/*
+       * end of routing
+       */}
     </>
   );
 }

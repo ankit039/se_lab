@@ -1,19 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./login.css";
 import { LoaderComponent } from "../loader/loader";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 
+import LoginContext from "../contexts/islogin";
+
 function LoginComponent() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cpassword, setCPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login, signup, resetPassword } = useAuth();
+  const {
+    login,
+    signup,
+    resetPassword,
+    createUser,
+    userExists,
+    sendVEmail,
+  } = useAuth();
   const history = useHistory();
+  const { isLogin, setisLogin } = useContext(LoginContext);
 
   const handlePasswordmatch = (p, cp) => {
     if (p != cp) {
@@ -33,8 +44,25 @@ function LoginComponent() {
       setLoading(true);
       await login(email, password)
         .then((data) => {
-          localStorage.setItem("email", data.user.email);
-          history.push("/news");
+          if (data.user.emailVerified == true) {
+            localStorage.setItem("se-name", data.user.displayName);
+            localStorage.setItem("se-uid", data.user.uid);
+            localStorage.setItem("se-email", data.user.email);
+            setisLogin({
+              login: true,
+              uid: data.user.uid,
+              name: data.user.displayName,
+              email: data.user.email,
+              platform_selected: []
+            });
+            //check if user exists + create new instance
+            userExists(data.user.uid, data.user.displayName, data.user.email, [
+              0,
+            ]);
+          } else {
+            alert("E-Mail is not verifed, kindly check mail.");
+            history.push("/");
+          }
         })
         .catch((e) => {
           alert(e.message.toString());
@@ -52,14 +80,15 @@ function LoginComponent() {
     if (cpassword !== password) {
       return setError("Password don't matched");
     }
-
     try {
       setError("");
       setLoading(true);
-      await signup(email, password)
+      await signup(email, password) //auth fun
         .then((data) => {
-          localStorage.setItem("email", data.user.email);
-          history.push("/platform_select");
+          data.user.updateProfile({
+            displayName: name,
+          });
+          sendVEmail();
         })
         .catch((e) => {
           history.push("/");
@@ -202,6 +231,16 @@ function LoginComponent() {
                 <p>Register to gain full access</p>
               </header>
               <section>
+                <label>
+                  <p>Name</p>
+                  <input
+                    type="text"
+                    placeholder=" "
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                  />
+                  <div className="border"></div>
+                </label>
                 <label>
                   <p>Email</p>
                   <input
