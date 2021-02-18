@@ -51,7 +51,7 @@ export function AuthProvider({ children }) {
         history.push("/news");
       })
       .catch((e) => {
-        alert(e + "<<<<<<<-");
+        alert(e);
       });
   }
 
