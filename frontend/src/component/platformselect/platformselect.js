@@ -9,12 +9,12 @@ function PlatformselectComponent() {
   const [select, setselected] = useState(
     JSON.parse("[" + localStorage.getItem("se-platform_selected") + "]")
   );
-  const [tickarr, setTickarr] = useState([false, false, false, false]);
+  const [tickarr, setTickarr] = useState([false, false, false, false, false]);
   const { changePlatform } = useAuth();
   const history = useHistory();
 
   if (select[0] == 0) {
-    setTickarr([false, false, false, false]);
+    setTickarr([false, false, false, false, false]);
   } else {
     var i;
     for (i = 0; i < select.length; i++) {
@@ -125,17 +125,17 @@ function PlatformselectComponent() {
 const platform = [
   {
     id: 1,
-    name: "BBC News",
-    link: "https://www.bbc.com/",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/BBC_News_2019.svg/1200px-BBC_News_2019.svg.png",
-  },
-  {
-    id: 2,
     name: "Inshorts",
     link: "https://inshorts.com/",
     image:
       "https://mir-s3-cdn-cf.behance.net/projects/404/4509cb100062303.Y3JvcCw4ODksNjk1LDUyLDE0Nw.png",
+  },
+  {
+    id: 2,
+    name: "NDTV",
+    link: "https://www.ndtv.com/",
+    image:
+      "https://www.indiantelevision.com/sites/default/files/styles/smartcrop_800x800/public/images/tv-images/2015/10/23/Untitled-1_3.jpg?itok=xTZClday",
   },
   {
     id: 3,
@@ -146,10 +146,17 @@ const platform = [
   },
   {
     id: 4,
-    name: "Google News",
-    link: "https://news.google.com/",
+    name: "India Today",
+    link: "https://www.indiatoday.in/",
     image:
-      "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc=w300-rw",
+      "https://pbs.twimg.com/profile_images/1323664537770323968/vD4Ifa_b_400x400.jpg",
+  },
+  {
+    id: 5,
+    name: "ZEE News",
+    link: "https://zeenews.india.com/",
+    image:
+      "https://img.apksum.com/8a/com.zeenews.hindinews/6.1.4/icon.png",
   },
 ];
 

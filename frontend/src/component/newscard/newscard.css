@@ -34,8 +34,7 @@ figure.snip1216 * {
   transition: all 0.3s ease;
 }
 figure.snip1216 .image {
-  max-height: 220px;
-  overflow: hidden;
+  background-size: cover !important;
 }
 figure.snip1216 img {
   max-width: 100%;
