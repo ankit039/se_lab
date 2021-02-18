@@ -6,7 +6,25 @@ import "./newscard.css";
 
 function NewscardComponent() {
   const history = useHistory();
-
+  const [initialData, setInitialData] = useState({})
+  useEffect(() => {
+    var uid = localStorage.getItem("se-uid");
+    fetch('https://se-lab-backend-ptfwc.run-ap-south1.goorm.io/newsapi', {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": '*'
+        },
+        body: JSON.stringify(uid),
+      })
+      .then((response) => {
+          return console.log(response.json());
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   const logoutButoon = () => {
     localStorage.removeItem("se-name");
     localStorage.removeItem("se-email");
