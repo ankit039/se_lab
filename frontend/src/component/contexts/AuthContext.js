@@ -36,6 +36,10 @@ export function AuthProvider({ children }) {
             email: email,
             platform_selected: arr,
           });
+          localStorage.setItem(
+            "se-platform_selected",
+            arr
+          );
           history.push("/platform_select");
         }
       });

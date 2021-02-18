@@ -57,7 +57,7 @@ function LoginComponent() {
             });
             //check if user exists + create new instance
             userExists(data.user.uid, data.user.displayName, data.user.email, [
-              0,
+              1
             ]);
           } else {
             alert("E-Mail is not verifed, kindly check mail.");
