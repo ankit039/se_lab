@@ -9,7 +9,7 @@ import "./newscard.css";
 function NewscardComponent() {
   const history = useHistory();
   const [initialData, setInitialData] = useState([
-    { imageURL: "", body: "", headline: "", source: "" },
+    { imageURL: "", body: "", headline: "", source: "", date:"0 0" },
   ]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -103,12 +103,12 @@ function NewscardComponent() {
               <img src={x.imageURL} alt="sample69" />
             </div>
             <figcaption>
-              {/* <div className="date">
-                <span className="day">28</span>
-                <span className="month">Oct</span>
-              </div> */}
+              <div className="date">
+                <span className="day">{x.date.split(" ")[0]}</span>
+                <span className="month">{x.date.split(" ")[1]}</span>
+              </div>
               <h3>{x.headline}</h3>
-              <p>{x.body}</p>
+              <p className="para">{x.body}</p>
             </figcaption>
             <footer>
               <div className="views">
